@@ -34,7 +34,7 @@ numLabels = length(unique(y_train(:,2))); %Handle class 0
 model = cell(numLabels,1);
 for k=1:numLabels
     fprintf('Computing SVM for class %i\n',k);
-    model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFonction','RBF'));
+    model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction','RBF'));
 end
 
 %% Get the posterior probability matrix for the predictions
