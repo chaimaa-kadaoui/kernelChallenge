@@ -20,10 +20,10 @@ x_test = mean(x_test,3);
 %x_test_p = x_test;
 
 window_size = 8;
-stride = 4;
+stride = 8;
 
-x_train_total_p = processHOG(x_train_total,window_size,stride);
-x_test_p = processHOG(x_test,window_size,stride);
+x_train_total_p = processHOG(x_train_total,window_size,stride,2);
+x_test_p = processHOG(x_test,window_size,stride,2);
 
 %% Train SVM
 
