@@ -1,7 +1,29 @@
-%% Preprocess data
+%% Load Data
 
-x_train_total_p = x_train_total;
-x_test_p = x_test;
+x_test = csvread('Xte.csv');
+x_test = x_test(:,1:end-1);
+x_train_total = csvread('Xtr.csv');
+x_train_total = x_train_total(:,1:end-1);
+y_train_total = csvread('Ytr.csv');
+
+%Moving input data to grayscale
+x_train_total = reshape(x_train_total, [5000,1024,3]);
+x_train_total = mean(x_train_total,3);
+
+%Moving input data to grayscale
+x_test = reshape(x_test, [2000,1024,3]);
+x_test = mean(x_test,3);
+
+% Preprocess data
+
+%x_train_total_p = x_train_total;
+%x_test_p = x_test;
+
+window_size = 8;
+stride = 4;
+
+x_train_total_p = processHOG(x_train_total,window_size,stride);
+x_test_p = processHOG(x_test,window_size,stride);
 
 %% Train SVM
 

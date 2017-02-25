@@ -8,8 +8,11 @@ x_train_total = reshape(x_train_total, [size(x_train_total,1),1024,3]);
 x_train_total = mean(x_train_total,3);
 
 %% Cross validation of HOG features
-window_sizes = [8,12,16];
-strides = [2,4];
+%window_sizes = [8,12,16];
+%strides = [2,4];
+
+window_sizes = [8];
+strides = [6,8];
 
 accs = zeros(length(window_sizes),length(strides),10);
 mean_accs = zeros(length(window_sizes),length(strides));

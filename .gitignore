@@ -89,3 +89,6 @@ ENV/
 .ropeproject
 
 *.csv
+run_matlab.sh
+*.mat
+*.0
