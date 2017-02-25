@@ -1,8 +1,8 @@
-function [acc, mean_acc] = validateHOG(x_train_total,y_train_total, window_size, stride)
+function [acc, mean_acc] = validateHOG(x_train_total,y_train_total, window_size, stride, kernel, p_norm)
 
     %% Preprocess data
 
-    x_train_total_p = processHOG(x_train_total,window_size,stride);
+    x_train_total_p = processHOG(x_train_total,window_size,stride, p_norm);
 
     %% Cross-validation
 
@@ -25,7 +25,7 @@ function [acc, mean_acc] = validateHOG(x_train_total,y_train_total, window_size,
         model = cell(numLabels,1);
         for k=1:numLabels
             fprintf('Computing SVM for class %i using the validation split %i\n',k, valPart);
-            model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction','RBF'));
+            model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction',kernel));
         end
 
         %% Get the posterior probability matrix for the predictions
@@ -47,5 +47,5 @@ function [acc, mean_acc] = validateHOG(x_train_total,y_train_total, window_size,
     end
 
     mean_acc = mean(acc);
-    fprintf('Average accuracy with window_size %i and stride %i: %f\n', window_size, stride, mean_acc);
+    fprintf('Average accuracy with kernel %s window_size %i and stride %i: %f\n', kernel, window_size, stride, mean_acc);
 end

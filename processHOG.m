@@ -1,4 +1,4 @@
-function [x_p] = processHOG(x, window_size, stride)
+function [x_p] = processHOG(x, window_size, stride, p_norm)
     x = reshape(x,[size(x,1),32,32]);
     l = floor((32-window_size)/stride)+1;
     n_bins = 12;
@@ -16,7 +16,9 @@ function [x_p] = processHOG(x, window_size, stride)
                 x_p(i,(row-1)*l*n_bins+(n_bins*(col-1)+1:n_bins*col)) = histogram;
             end
         end
-        % L2 normalization
-        x_p(i,:) = x_p(i,:)/norm(x_p(i,:));
+        % normalization
+        if p_norm~=0
+            x_p(i,:) = x_p(i,:)/norm(x_p(i,:), p_norm);
+        end
     end
 end
