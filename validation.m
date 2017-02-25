@@ -28,8 +28,4 @@ end
 %% Extract best parameters
 [best_acc,p] = max(mean_accs(:));
 [best_i, best_j] = ind2sub(size(mean_accs),p);
-<<<<<<< HEAD
-fprintf('Best accuracy (%f) obtained with window_size %i and stride %i',best_acc, window_sizes(best_i), strides(best_j));
-=======
 fprintf('Best accuracy (%f) obtained with kernel %s, window_size 8 and stride %i',best_acc, char(kernels{best_j}), strides(best_i));
->>>>>>> a99266cbd8cf0209971deff637ab8117f1db8ab6
