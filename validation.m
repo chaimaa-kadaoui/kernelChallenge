@@ -9,7 +9,7 @@ x_train_total = mean(x_train_total,3);
 
 %% Cross validation of HOG features
 window_size = 8;
-strides = [6,8];
+strides = 8;
 kernels = {'intersection','hellinger','chi2'};
 p_norms = [1,1,0];
 
