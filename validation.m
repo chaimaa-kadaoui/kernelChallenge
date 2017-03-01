@@ -8,10 +8,13 @@ x_train_total = reshape(x_train_total, [size(x_train_total,1),1024,3]);
 x_train_total = mean(x_train_total,3);
 
 %% Cross validation of HOG features
-window_size = 8;
+window_size = 5;
 strides = 8;
-kernels = {'intersection','hellinger','chi2'};
-p_norms = [1,1,0];
+%kernels = {'intersection','hellinger','chi2'};
+%p_norms = [1,1,0];
+
+kernels = {'RBF'};
+p_norms = [2];
 
 accs = zeros(length(strides),length(kernels),10);
 mean_accs = zeros(length(strides),length(kernels));
