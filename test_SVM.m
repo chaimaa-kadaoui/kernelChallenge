@@ -27,14 +27,26 @@ x_train = x_train_total(1:boarderIndex,:);
 y_val = y_train_total(boarderIndex+1:end,:);
 y_train = y_train_total(1:boarderIndex,:);
 
+%% Kernel
+
+gamma = 0.5;
+gram_train = rbf(x_train,x_train,gamma);
+gram_val = rbf(x_train,x_val,gamma);
+C = 1;
 %% Train SVM
 
 %# train one-against-all models
 numLabels = length(unique(y_train(:,2))); %Handle class 0
-model = cell(numLabels,1);
+models = cell(numLabels,1);
 for k=1:numLabels
     fprintf('Computing SVM for class %i\n',k);
-    model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction','RBF'));
+    y_bin = zeros(size(y_train,1),1);
+    y_bin(y_train(:,2)==k-1)=1;
+    y_bin(y_train(:,2)~=k-1)=-1;
+    [alpha_y, bias] = fitcsvm_kernel(gram_train, y_bin, C);
+    models{k}.alpha_y = alpha_y;
+    models{k}.bias = bias;
+    models{k}.post_proba = fit_posterior(gram_train, alpha_y, bias);
 end
 
 %% Get the posterior probability matrix for the predictions
@@ -44,13 +56,13 @@ numTest = size(x_val,1);
 prob = zeros(numTest,numLabels);
 for k=1:numLabels
     fprintf('Computing SVM for class %i\n',k);
-    [~,p] = predict(model{k}, x_val);
-    prob(:,k) = p(:,model{k}.ClassNames==1);    %# probability of class==k
+    post_proba = fit_posterior(gram_val, models{k}.alpha_y, models{k}.bias);
+    prob(:,k) = post_proba(:,1);    %# probability of class==k
 end
 
 %# predict the class with the highest probability
 [~,pred] = max(prob,[],2);
-acc = sum(pred == y_val) ./ numel(y_val);    %# accuracy
-C = confusionmat(y_val, pred);                   %# confusion matrix
+pred = pred - 1;
+acc = sum(pred == y_val) ./ size(y_val,1);    %# accuracy
 fprintf('Resulting accuracy : %f\n',acc);
 

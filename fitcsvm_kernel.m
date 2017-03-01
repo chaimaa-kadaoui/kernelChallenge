@@ -1,4 +1,4 @@
-function [alpha, bias] = fitcsvm_kernel(gram_matrix, y_bin, C)
+function [alpha_y, bias] = fitcsvm_kernel(gram_matrix, y_bin, C)
     % gram_matrix is a NxN gram matrix already computed for the train data
     % with the desired kernel
     % y_bin is the binary labels of size Nx1 with +1 or -1 values
