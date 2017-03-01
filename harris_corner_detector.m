@@ -1,8 +1,7 @@
-function [ harris_img ] = harris_corner_detector( img,sigma_derivative,sigma_integration, epsilon )
+function [ harris_img ] = harris_corner_detector( img,sigma_derivative,sigma_integration, epsilon, sz )
 %Computes the harris corner detector
 %   sigma_derivation : std deviation for computing the derivation operator
 %   
-sz=10;
 raw_deriv = [-0.5 0 0.5];
 x = linspace(-sz / 2, sz / 2, sz);
 gaussFilter = exp(-x .^ 2 / (2 * sigma_derivative ^ 2));
