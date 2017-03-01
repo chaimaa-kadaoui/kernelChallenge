@@ -11,7 +11,7 @@ function [x_p] = processHOG(x, window_size, stride, p_norm)
         Gdir_bin = ceil(n_bins*Gdir/360);
         for row=1:l
             for col=1:l
-                window = Gdir_bin((row-1)*stride+1:row*stride,(col-1)*stride+1:col*stride);
+                window = Gdir_bin((row-1)*stride+(1:window_size),(col-1)*stride+(1:window_size));
                 histogram = histcounts(window,edges);
                 x_p(i,(row-1)*l*n_bins+(n_bins*(col-1)+1:n_bins*col)) = histogram;
             end
