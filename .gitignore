@@ -92,3 +92,4 @@ ENV/
 run_matlab.sh
 *.mat
 *.0
+*.txt
