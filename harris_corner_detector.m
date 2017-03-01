@@ -22,8 +22,7 @@ Ix_2 = conv2(Ix.*Ix,gaussFilter_i,'same');
 Iy_2 = conv2(Iy.*Iy,gaussFilter_i,'same');
 Ixy = conv2(Ix.*Iy,gaussFilter_i,'same');
 
-
-
+%Computing the harris function
 harris_img = (Ix_2.*Iy_2 - Ixy.^2)./(Ix_2 + Iy_2 + epsilon);
 
 
