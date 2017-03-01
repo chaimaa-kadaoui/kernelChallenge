@@ -33,7 +33,6 @@ gamma = 0.5;
 gram_train = rbf(x_train,x_train,gamma);
 gram_val = rbf(x_train,x_val,gamma);
 C = 1;
-
 %% Train SVM
 
 %# train one-against-all models
@@ -62,8 +61,8 @@ numTest = size(x_val,1);
 prob = zeros(numTest,numLabels);
 for k=1:numLabels
     fprintf('Computing SVM for class %i\n',k);
-    [~, score] = predict_diy(gram_val, models{k}.alpha_y, models{k}.bias);
-    post_proba = fit_posterior(score, A, B);
+    [~, score] = predict_diy(gram_val, models{k}alpha_y, bias);
+    post_proba = fit_posterior(gram_val, models{k}.alpha_y, models{k}.bias);
     prob(:,k) = post_proba(:,1);    %# probability of class==k
 end
 
