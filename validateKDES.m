@@ -27,7 +27,7 @@ function [acc, mean_acc] = validateKDES(x_train_total,y_train_total)
         model = cell(numLabels,1);
         for k=1:numLabels
             fprintf('Computing SVM for class %i using the validation split %i\n',k, valPart);
-            model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction',kernel));
+            model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction','RBF'));
         end
 
         %% Get the posterior probability matrix for the predictions
@@ -53,5 +53,5 @@ function [acc, mean_acc] = validateKDES(x_train_total,y_train_total)
     end
 
     mean_acc = mean(acc(acc>0));
-    fprintf('Average accuracy with kernel descriptors and window_size %i and stride %i: %f\n', kernel, window_size, stride, mean_acc);
+    fprintf('Average accuracy with kernel descriptors: %f\n', mean_acc);
 end
