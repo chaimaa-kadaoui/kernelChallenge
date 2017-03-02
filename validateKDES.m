@@ -1,10 +1,10 @@
-function [acc, mean_acc] = validateKDES(x_train_total,y_train_total)
+function [acc, mean_acc] = validateKDES(x_train_total,y_train_total,param)
 
-    %% Preprocess data with windowed HOG
+    %% Preprocess data with KDES
 
     % Parameter gamma_c changed to 6 (4 in the article) because of
     % different scaling in the intensity values
-    x_train_total_p = processKDES(x_train_total,5,3,6,2,0.8,0.2,8,8,50,50,50);
+    x_train_total_p = processKDES(x_train_total,5,3,6,2,0.8,0.2,param(1),param(2),param(3),param(4),param(5));
 
     %% Cross-validation
 
@@ -27,7 +27,7 @@ function [acc, mean_acc] = validateKDES(x_train_total,y_train_total)
         model = cell(numLabels,1);
         for k=1:numLabels
             fprintf('Computing SVM for class %i using the validation split %i\n',k, valPart);
-            model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction','RBF'));
+            model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction','linear'));
         end
 
         %% Get the posterior probability matrix for the predictions
@@ -36,7 +36,7 @@ function [acc, mean_acc] = validateKDES(x_train_total,y_train_total)
         numTest = size(x_val,1);
         prob = zeros(numTest,numLabels);
         for k=1:numLabels
-            fprintf('Computing posteriors for class %i using the validation split %i\n',k);
+            fprintf('Computing posteriors for class %i using the validation split %i\n',k, valPart);
             [~,p] = predict(model{k}, x_val);
             prob(:,k) = p(:,model{k}.ClassNames==1);    % probability of class==k
         end
