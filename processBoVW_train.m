@@ -9,7 +9,7 @@ function [x_p, C, visual_words] = processBoVW_train(x, window_size, stride, p_no
         image = squeeze(x(i,:,:));
         for row=1:l
             for col=1:l
-                window = image((row-1)*stride+1:row*stride,(col-1)*stride+1:col*stride);
+                window = image((row-1)*stride+(1:window_size),(col-1)*stride+(1:window_size));
                 visual_words((i-1)*l^2+(row-1)*l+col,:) = window(:);
             end
         end
