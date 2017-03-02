@@ -1,4 +1,7 @@
-function [x_p, C, visual_words] = processBoVW_train(x, window_size, stride, p_norm, n_clusters, display_silhouette)
+function [x_p, C, visual_words] = processBoVW_train(x, window_size, stride, p_norm, n_clusters, max_iter, display_silhouette)
+    if nargin < 7
+        display_silhouette = 0;
+    end
     x = reshape(x,[size(x,1),32,32]);
     l = floor((32-window_size)/stride)+1;
     visual_words = zeros(size(x,1)*l^2,window_size^2);
@@ -11,8 +14,8 @@ function [x_p, C, visual_words] = processBoVW_train(x, window_size, stride, p_no
             end
         end
     end
-    fprintf('Computing k-means clustering')
-    [idx, C] = kmeans(visual_words, n_clusters,'Display','iter');
+    fprintf('Computing k-means clustering from %i visual words\n',size(visual_words,1));
+    [idx, C] = kmeans(visual_words, n_clusters,'Display','iter','MaxIter',max_iter);
     
     if display_silhouette
         figure;
