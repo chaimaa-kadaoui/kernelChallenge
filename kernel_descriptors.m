@@ -4,7 +4,9 @@ function [F] = kernel_descriptors(c,K1,K2,alpha)
     T = size(alpha,2);
     F = zeros(1,T);
     alpha = reshape(alpha,d1,d2,T);
+    
+    % Computation of the feature t (formula (12))
     parfor t=1:T
-        F(t) = dot(K1',alpha(:,:,t)*K2)*c;
+        F(t) = dot(K1',alpha(:,:,t)*K2')*c;
     end
 end
