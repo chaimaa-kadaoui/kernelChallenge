@@ -7,6 +7,6 @@ function [alpha, lambda] = KPCA(K,T)
     
     % Compute eigenvectors associeted to T highest eigenvalues
     [alpha, lambda] = eigs(K,T);
-    lambda = diag(lambda);
+    lambda = diag(abs(lambda));
     alpha = bsxfun(@rdivide, alpha,sqrt(lambda)');
 end

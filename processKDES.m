@@ -1,4 +1,4 @@
-function [x_patches] = processKDES(x,gamma_o,gamma_p,gamma_c,gamma_b,eps_g,eps_s,window_size,stride,T_grad, T_col, T_shape)
+function [x_patches, x_patch_statistics] = processKDES(x,gamma_o,gamma_p,gamma_c,gamma_b,eps_g,eps_s,window_size,stride,T_grad, T_col, T_shape)
     x = reshape(x,[size(x,1),32,32]);
     l = floor((32-window_size)/stride)+1;
     
@@ -34,7 +34,7 @@ function [x_patches] = processKDES(x,gamma_o,gamma_p,gamma_c,gamma_b,eps_g,eps_s
     
     disp('Performing KPCA on basis vectors');
     % KPCA on the basis vectors phi_o x phi_p
-    [alpha_op,~] = KPCA(kron(K_p,K_p),T_grad);
+    [alpha_op,~] = KPCA(kron(K_p,K_o),T_grad);
     % KPCA on the basis vectors phi_c x phi_p
     [alpha_cp,~] = KPCA(kron(K_p,K_c),T_col);
     % KPCA on the basis vectors phi_b x phi_p
@@ -46,12 +46,13 @@ function [x_patches] = processKDES(x,gamma_o,gamma_p,gamma_c,gamma_b,eps_g,eps_s
     Z = [meshY(:) meshX(:)];
     
     % Loop over the images
+    disp('Computing kernel descriptors');
     parfor i=1:size(x,1)
-        fprintf('Computing kernel descriptors for image %i\n',i);
         % Extract the image
         image = squeeze(x(i,:,:));
         
         patch_features = zeros(l^2,T_grad+T_col+T_shape);
+        patch_statistics = zeros(l^2,2);
         
         % Compute the directions of the gradient
         [Gmag,Gdir] = imgradient(image);
@@ -62,6 +63,7 @@ function [x_patches] = processKDES(x,gamma_o,gamma_p,gamma_c,gamma_b,eps_g,eps_s
                 window_c = (col-1)*stride+(1:window_size);
                 % Computation of m_tilde (formula (2))
                 m = reshape(Gmag(window_r,window_c),window_size^2,1);
+                m_mean = mean(m);
                 m = m/sqrt(sum(m.^2)+eps_g);
                 % Computation of theta_tilde (formula (6))
                 theta = reshape(Gdir(window_r,window_c),window_size^2,1);
@@ -87,6 +89,7 @@ function [x_patches] = processKDES(x,gamma_o,gamma_p,gamma_c,gamma_b,eps_g,eps_s
                         b((z_i-1)*window_size+z_j,:) = b_pixels';
                     end
                 end
+                s_mean = mean(s);
                 s = s/sqrt(sum(s.^2)+eps_s);
                 
                 % Gram matrix of k_o
@@ -107,8 +110,10 @@ function [x_patches] = processKDES(x,gamma_o,gamma_p,gamma_c,gamma_b,eps_g,eps_s
                 
                 % Put together patch features
                 patch_features((row-1)*l+col,:) = [F_grad F_col F_shape];
+                patch_statistics((row-1)*l+col,:) = [m_mean s_mean];
             end
         end
         x_patches(i,:) = reshape(patch_features',[1,l^2*(T_grad+T_col+T_shape)]);
+        x_patch_statistics(i,:) = reshape(patch_statistics',[1,l^2*2]);
     end
 end
