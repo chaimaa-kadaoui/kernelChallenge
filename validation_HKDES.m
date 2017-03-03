@@ -22,4 +22,5 @@ end
 
 %% Extract best parameters
 [best_acc,p] = max(mean_accs(:));
-fprintf('Best accuracy (%f) obtained with gamma_o %i gamma_p %i',best_acc, params(p,1), params(p,2));
+fprintf('Best accuracy (%f) obtained with set of parameters %i',best_acc, l);
+disp(params(l,:));
