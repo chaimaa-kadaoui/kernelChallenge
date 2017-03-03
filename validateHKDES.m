@@ -1,13 +1,8 @@
-function [acc, mean_acc] = validateHKDES(x_train_total,y_train_total)
+function [acc, mean_acc] = validateHKDES(x_patches, x_statistics, y_train_total, params)
 
-    %% Preprocess data with KDES
-
-    % Parameter gamma_c changed to 6 (4 in the article) because of
-    % different scaling in the intensity values
-    % Parameters of the article 5,3,6,2,0.8,0.2
-    % 5,2,6,2,0.8,0.2 seems better
-    [x_patches, x_statistics] = processKDES(x_train_total,5,3,6,2,0.8,0.2,8,2,200,50,200);
-    x_train_total_p = processHKDES(x_patches, x_statistics, 1,1,1,1,0.5,8,2,200,50,200,1000,2000,500,2000);
+    %% Preprocess data with HKDES
+    x_train_total_p = processHKDES(x_patches, x_statistics, param(1),param(2),param(3),param(4),param(5),
+		8,2,200,50,200,1000,2000,500,2000);
     %% Cross-validation
 
     splitPart = 10;
