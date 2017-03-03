@@ -29,7 +29,7 @@ y_train = y_train_total(1:boarderIndex,:);
 
 %% Kernel
 
-gamma = 0.5;
+gamma = 1;
 gram_train = rbf(x_train,x_train,gamma);
 gram_val = rbf(x_train,x_val,gamma);
 C = 1;
@@ -45,14 +45,11 @@ for k=1:numLabels
     y_bin(y_train(:,2)==k-1)=1;
     y_bin(y_train(:,2)~=k-1)=-1;
     [alpha_y, bias] = fitcsvm_kernel(gram_train, y_bin, C);
-    [~, score] = predict_diy(gram_train, alpha_y, bias);
-    [A, B] = fit_sigmoid(score, y_bin);
+    [A, B] = fit_svm_posterior(gram_train, y_bin, C);
     models{k}.alpha_y = alpha_y;
     models{k}.bias = bias;
-    models{k}.score = score;
     models{k}.A = A;
     models{k}.B = B;
-    models{k}.post_proba = fit_posterior(score, A, B);
 end
 
 %% Get the posterior probability matrix for the predictions
@@ -62,8 +59,8 @@ numTest = size(x_val,1);
 prob = zeros(numTest,numLabels);
 for k=1:numLabels
     fprintf('Computing SVM for class %i\n',k);
-    [~, score] = predict_diy(gram_val, models{k}.alpha_y, models{k}.bias);
-    post_proba = fit_posterior(score, A, B);
+    [~, score] = predict_svm(gram_val, models{k}.alpha_y, models{k}.bias);
+    post_proba = get_posterior(score, A, B);
     prob(:,k) = post_proba(:,1);    %# probability of class==k
 end
 
