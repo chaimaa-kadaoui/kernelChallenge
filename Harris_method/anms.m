@@ -1,6 +1,8 @@
 function [ maxList ] = anms( img, nmax,c )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%Implementing adaptive non maxima suppression
+%   img contains the corenerness measure of the image
+%   nmax is the number of maxima we want
+%   c is the algorithm parameter (typical value : 0.9)
 
 INFTY = 10^10;
 
