@@ -1,8 +1,7 @@
-function [acc, mean_acc] = validateHKDES(x_patches, x_statistics, y_train_total, params)
+function [acc, mean_acc] = validateHKDES(x_patches, x_statistics, y_train_total, param)
 
     %% Preprocess data with HKDES
-    x_train_total_p = processHKDES(x_patches, x_statistics, param(1),param(2),param(3),param(4),param(5),
-		8,2,200,50,200,1000,2000,500,2000);
+    x_train_total_p = processHKDES(x_patches, x_statistics, param(1),param(2),param(3),param(4),param(5),8,2,200,50,200,1000,2000,500,2000);
     %% Cross-validation
 
     splitPart = 10;
