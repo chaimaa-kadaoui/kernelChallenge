@@ -18,13 +18,13 @@ function [x_p] = processHKDES(x_patches,x_patch_statistics,gamma_C,gamma_Fg,gamm
     
     % Creation of the basis points of k_Fg (using kmeans)
     disp('Creating basis points for gradient patch kernel (kmeans)');
-    [~, X_G] = kmeans(patch_features(:,1:T_grad), n_clusters,'MaxIter',200,'Display','iter');
+    [~, X_G] = kmeans(patch_features(1:8:end,1:T_grad), n_clusters,'MaxIter',200,'Display','iter');
     % Creation of the basis points of k_Fc (using kmeans)
     disp('Creating basis points for intensity patch kernel (kmeans)');
-    [~, X_C] = kmeans(patch_features(:,T_grad+(1:T_col)), n_clusters,'MaxIter',200,'Display','iter');
+    [~, X_C] = kmeans(patch_features(1:8:end,T_grad+(1:T_col)), n_clusters,'MaxIter',200,'Display','iter');
     % Creation of the basis points of k_Fs (using kmeans)
     disp('Creating basis points for shape patch kernel (kmeans)');
-    [~, X_S] = kmeans(patch_features(:,T_grad+T_col+(1:T_shape)), n_clusters,'MaxIter',200,'Display','iter');
+    [~, X_S] = kmeans(patch_features(1:8:end,T_grad+T_col+(1:T_shape)), n_clusters,'MaxIter',200,'Display','iter');
     
     disp('Building Gram matrices of basis vectors');
     % Gram matrix of k_C
