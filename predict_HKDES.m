@@ -16,15 +16,15 @@ x_test = mean(x_test,3);
 
 % Preprocess data
 [x_patches, x_statistics] = processKDES(x_train_total,5,3,6,2,0.8,0.2,8,2,200,50,200);
-save('x_patches.mat',x_patches);
-save('x_statistics.mat',x_statistics);
+save('x_patches.mat','x_patches');
+save('x_statistics.mat','x_statistics');
 
 [x_patches_test, x_statistics_test] = processKDES(x_test,5,3,6,2,0.8,0.2,8,2,200,50,200);
-save('x_patches_test.mat',x_patches_test);
-save('x_statistics_test.mat',x_statistics_test);
+save('x_patches_test.mat','x_patches_test');
+save('x_statistics_test.mat','x_statistics_test');
 
 [X_G,X_C,X_S] = create_basis(x_patches,8,2,200,50,200,1000);
-save('X_basis.mat', X_G,X_C,X_S);
+save('X_basis.mat', 'X_G','X_C','X_S');
 
 x_train_total_p = processHKDES(x_patches,x_statistics,X_G,X_C,X_S,1,1,1,1,0.5,8,2,2000,500,2000);
 save('x_HKDES.mat', x_train_total_p);
