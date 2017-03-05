@@ -4,10 +4,10 @@ function [labels, C] = k_means(X, k, maxiter)
     last = 0;
     iter = 0;
     while any(labels ~= last) && iter<maxiter
-        E = sparse(1:n,labels,1,n,k,n);  % transform label into indicator matrix
-        C = (E*spdiags(1./sum(E,1)',0,k,k))'*X;    % compute centers 
+        E = sparse(1:n,labels,1,n,k,n);
+        C = (E*spdiags(1./sum(E,1)',0,k,k))'*X;
         last = labels;
-        [val,labels] = max(bsxfun(@minus,C*X',dot(C,C,2)/2),[],1); % assign labels
+        [val,labels] = max(bsxfun(@minus,C*X',dot(C,C,2)/2),[],1);
         distorsion = dot(X(:),X(:))-2*sum(val);
         fprintf('Distorsion at iteration %i: %f\n',iter, distorsion);
         iter = iter+1;

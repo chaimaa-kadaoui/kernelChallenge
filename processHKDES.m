@@ -1,30 +1,18 @@
-function [x_p] = processHKDES(x_patches,x_patch_statistics,gamma_C,gamma_Fg,gamma_Fc, gamma_Fs, eps_h,window_size,stride,T_grad, T_col, T_shape, n_clusters, T_G, T_C, T_S)
+function [x_p] = processHKDES(x_patches,x_patch_statistics, X_G, X_C, X_S,gamma_C,gamma_Fg,gamma_Fc, gamma_Fs, eps_h, window_size, stride, T_G, T_C, T_S)
     l = floor((32-window_size)/stride)+1;
     
     x_p = zeros(size(x_patches,1),T_G+T_C+T_S);
+    
+    T_grad = size(X_G,2);
+    T_col = size(X_C,2);
+    T_shape = size(X_S,2);
     T = T_grad+T_col+T_shape;
-    patch_features = zeros(size(x_patches,1)*l^2,T);
-    for i=1:size(x_patches,1)
-        for j=1:l^2
-            patch_features((i-1)*l^2+j,:) = x_patches(i,(j-1)*T+1:j*T);
-        end
-    end
     
     disp('Creating basis points');
     % Creation of the basis points of k_C
     grid_c = linspace(0,1,5);
     [meshX,meshY] = meshgrid(grid_c);
     X_c = [meshX(:) meshY(:)];
-    
-    % Creation of the basis points of k_Fg (using kmeans)
-    disp('Creating basis points for gradient patch kernel (kmeans)');
-    [~, X_G] = kmeans(patch_features(1:8:end,1:T_grad), n_clusters,'MaxIter',200,'Display','iter');
-    % Creation of the basis points of k_Fc (using kmeans)
-    disp('Creating basis points for intensity patch kernel (kmeans)');
-    [~, X_C] = kmeans(patch_features(1:8:end,T_grad+(1:T_col)), n_clusters,'MaxIter',200,'Display','iter');
-    % Creation of the basis points of k_Fs (using kmeans)
-    disp('Creating basis points for shape patch kernel (kmeans)');
-    [~, X_S] = kmeans(patch_features(1:8:end,T_grad+T_col+(1:T_shape)), n_clusters,'MaxIter',200,'Display','iter');
     
     disp('Building Gram matrices of basis vectors');
     % Gram matrix of k_C
@@ -83,10 +71,7 @@ function [x_p] = processHKDES(x_patches,x_patch_statistics,gamma_C,gamma_Fg,gamm
         S = S_total(i,:)';
         S = S/sqrt(sum(S.^2)+eps_h);
         
-        F = zeros(l^2,T_grad+T_col+T_shape);
-        for j=1:l^2
-            F(j,:) = x_patches(i,(j-1)*T+1:j*T); %#ok<PFBNS>
-        end
+        F = reshape(x_patches(i,:),T,l^2)'
         Fg = F(:,1:T_grad);
         Fc = F(:,T_grad+(1:T_col));
         Fs = F(:,T_grad+T_col+(1:T_shape));
