@@ -94,3 +94,4 @@ run_matlab.sh
 *.0
 *.txt
 *.png
+*.m~
