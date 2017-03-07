@@ -48,6 +48,8 @@ function [x_patches, x_patch_statistics] = processKDES(x,gamma_o,gamma_p,gamma_c
     % Loop over the images
     disp('Computing kernel descriptors');
     parfor i=1:size(x,1)
+        fprintf('Computing kernel descriptors for image %i\n',i);
+
         % Extract the image
         image = squeeze(x(i,:,:));
         
