@@ -95,3 +95,6 @@ run_matlab.sh
 *.txt
 *.png
 *.m~
+
+OLS/
+scatnet-0.2/
