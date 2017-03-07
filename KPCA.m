@@ -8,5 +8,8 @@ function [alpha, lambda] = KPCA(K,T)
     % Compute eigenvectors associeted to T highest eigenvalues
     [alpha, lambda] = eigs(K,T);
     lambda = diag(abs(lambda));
-    alpha = bsxfun(@rdivide, alpha,sqrt(lambda)');
+    alpha = bsxfun(@rdivide, alpha, abs(sqrt(lambda))');
+    if ~isreal(alpha) || ~isreal(lambda)
+        disp('Eigenvalues or eigenvectors not real!');
+    end
 end
