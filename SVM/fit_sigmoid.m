@@ -7,14 +7,14 @@
 function [A, B] = fit_sigmoid(score, y_bin)
     % score: SVM output Nx1 array
     % y_bin: true classes Nx1 with +1 and -1 values
-    
-    %Dimension
+
+    % Dimension
     N = size(y_bin,1);
-    
+
     target = y_bin == 1;
     prior1 = sum(y_bin == 1);
     prior0 = sum(y_bin == -1);
-    
+
     % Initialisation
     A = 0;
     B = log((prior0+1)/(prior1+1));
@@ -23,8 +23,8 @@ function [A, B] = fit_sigmoid(score, y_bin)
     lambda = 1e-3;
     olderr = 1e300;
     % pp is a temporary array
-    pp = (prior1+1)/(prior0+prior1+2)*ones(N,1);
-    
+    pp = ((prior1+1)/(prior0+prior1+2))*ones(N,1);
+
     % Algorithm
     count = 0;
     for it = 1:100
@@ -61,6 +61,7 @@ function [A, B] = fit_sigmoid(score, y_bin)
             p = 1./(1 + exp(A*score+B));
             pp = p;
             p(p==0) = exp(-200); % To make sure log(0) = -200
+            p(p==1) = 1 - exp(-200);
             err = -sum(t.*log(p)+(1-t).*log(1-p));
             if err < olderr*(1 + 1e-7)
                 lambda = lambda*0.1;
