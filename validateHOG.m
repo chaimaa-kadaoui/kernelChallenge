@@ -55,7 +55,7 @@ function [acc, mean_acc] = validateHOG(x_train_total,y_train_total, window_size,
         numTest = size(x_val,1);
         prob = zeros(numTest,numLabels);
         for k=1:numLabels
-            fprintf('Computing posteriors for class %i using the validation split %i\n',k);
+            fprintf('Computing posteriors for class %i using the validation split %i\n',k,valPart);
             [~,p] = predict(model{k}, x_val);
             prob(:,k) = p(:,model{k}.ClassNames==1);    % probability of class==k
         end

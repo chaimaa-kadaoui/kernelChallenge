@@ -1,6 +1,6 @@
 function [acc, mean_acc] = validate_scat(x_train_total,y_train_total,kernel)
 
-    x_train_total_p = process_scat(x_train_total);
+    x_train_total_p = process_scat(x_train_total,y_train_total);
 
     %% Cross-validation
 
