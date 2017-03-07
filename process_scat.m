@@ -15,17 +15,18 @@ Wop = wavelet_factory_2d(size(squeeze(x_r(1,:,:))),filt_opt,scat_opt);
 S_mat = sum(sum(format_scat(scat(squeeze(x_r(1,:,:)),Wop)),2),3);
 scatter = sum(format_scat(scat(squeeze(x_r(1,:,:)),Wop)),2);
 
-x_p = zeros(size(x,1),numel(scatter));
-parfor i = 1:size(x,1)
-    scatter_i = sum(format_scat(scat(squeeze(x_r(i,:,:)),Wop)),2);
-    x_p(i,:) = reshape(scatter_i,[1,numel(scatter_i)]);
-    if mod(i,1000) == 0
-        fprintf('Progress : %f%%\n',i/size(x,1));
-    end
-end
+% x_p = zeros(size(x,1),numel(scatter));
+% parfor i = 1:size(x,1)
+%     scatter_i = sum(format_scat(scat(squeeze(x_r(i,:,:)),Wop)),2);
+%     x_p(i,:) = reshape(scatter_i,[1,numel(scatter_i)]);
+%     if mod(i,1000) == 0
+%         fprintf('Progress : %f%%\n',i/size(x,1));
+%     end
+% end
+load('scat_features');
 
 threshold = 0.1;
-[x_ols, ind] = ols(x_p,y(:,2),floor(numel(scatter)/30));
+[x_ols, ind] = ols(x_p,y(:,2),floor(numel(scatter)/8));
 
 x_p = x_p(:,ind);
 
