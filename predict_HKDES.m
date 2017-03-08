@@ -14,29 +14,24 @@ x_train_total = mean(x_train_total,3);
 x_test = reshape(x_test, [2000,1024,3]);
 x_test = mean(x_test,3);
 
+x = [x_train_total; x_test];
+
 % Preprocess data
-[x_patches, x_statistics] = processKDES(x_train_total,5,3,6,2,0.8,0.2,8,2,200,50,200);
-save('x_patches_realRBF.mat','x_patches');
-save('x_statistics_realRBF.mat','x_statistics');
+[x_patches_all, x_statistics_all] = processKDES(x,5,3,6,2,0.8,0.2,8,2,200,50,200);
+save('x_all.mat','x_patches_all');
+save('x_statistics_all.mat','x_statistics_all');
 
-[x_patches_test, x_statistics_test] = processKDES(x_test,5,3,6,2,0.8,0.2,8,2,200,50,200);
-save('x_patches_realRBF_test.mat','x_patches_test');
-save('x_statistics_realRBF_test.mat','x_statistics_test');
+[X_G,X_C,X_S] = create_basis(x_patches_all,8,2,200,50,200,1000);
+save('x_basis_all.mat', 'X_G','X_C','X_S');
 
-[X_G,X_C,X_S] = create_basis(x_patches,8,2,200,50,200,1000);
-save('X_basis_newKmeans_realRBF.mat', 'X_G','X_C','X_S');
-
-x_train_total_p = processHKDES(x_patches,x_statistics,X_G,X_C,X_S,1,1,1,1,0.5,8,2,1000,200,1000);
-save('x_HKDES_realRBF.mat', 'x_train_total_p');
-
-x_test_p = processHKDES(x_patches_test,x_statistics_test,X_G,X_C,X_S,1,1,1,1,0.5,8,2,1000,200,1000);
-save('x_HKDES_realRBF_test.mat', 'x_test_p');
+x_all = processHKDES(x_patches_all,x_statistics_all,X_G,X_C,X_S,1,1,1,1,0.5,8,2,1000,200,1000);
+save('x_HKDES_all.mat', 'x_all');
 
 %% Select features
 n_features = [800,20,800];
 
-x_train_cut = x_train_total_p(:,[1:n_features(1), 1000+(1:n_features(2)), 1200+(1:n_features(3))]);
-x_test_cut = x_test_p(:,[1:n_features(1), 1000+(1:n_features(2)), 1200+(1:n_features(3))]);
+x_train_cut = x_all(1:size(x_train_total,1),[1:n_features(1), 1000+(1:n_features(2)), 1200+(1:n_features(3))]);
+x_test_cut = x_test_p(size(x_train_total,1)+(1:size(x_test,1)),[1:n_features(1), 1000+(1:n_features(2)), 1200+(1:n_features(3))]);
 
 %% Kernel
 
@@ -86,7 +81,7 @@ pred_diy = pred_diy-1;
 pred_diy = [(1:numTest)' pred_diy];
 
 % write prediction to file
-path = './results/Yte_newHKDES_800_20_800_C1.csv';
+path = './results/Yte_allHKDES_800_20_800_C1.csv';
 csvfile = fopen(path,'w');
 fprintf(csvfile,'Id,Prediction\n');
 fclose(csvfile);
