@@ -63,7 +63,7 @@ end
 %% Get the posterior probability matrix for the predictions
 
 % get probability estimates of test instances using each model
-numTest = size(x_test_p,1);
+numTest = size(x_test_cut,1);
 prob_diy = zeros(numTest,numLabels);
 prob = zeros(numTest,numLabels);
 parfor k=1:numLabels
