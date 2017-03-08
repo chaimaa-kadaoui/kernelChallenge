@@ -35,8 +35,8 @@ save('x_HKDES_realRBF_test.mat', 'x_test_p');
 %% Select features
 n_features = [800,20,800];
 
-x_train_cut = x_train_total_p(:,[1:n_features(1), 2000+(1:n_features(2)), 2500+(1:n_features(3))]);
-x_test_cut = x_test_p(:,[1:n_features(1), 2000+(1:n_features(2)), 2500+(1:n_features(3))]);
+x_train_cut = x_train_total_p(:,[1:n_features(1), 1000+(1:n_features(2)), 1200+(1:n_features(3))]);
+x_test_cut = x_test_p(:,[1:n_features(1), 1000+(1:n_features(2)), 1200+(1:n_features(3))]);
 
 %% Kernel
 
@@ -86,7 +86,7 @@ pred_diy = pred_diy-1;
 pred_diy = [(1:numTest)' pred_diy];
 
 % write prediction to file
-path = './results/Yte_HKDES_800_20_800_C1.csv';
+path = './results/Yte_newHKDES_800_20_800_C1.csv';
 csvfile = fopen(path,'w');
 fprintf(csvfile,'Id,Prediction\n');
 fclose(csvfile);
