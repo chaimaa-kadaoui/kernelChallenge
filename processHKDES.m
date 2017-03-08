@@ -26,13 +26,13 @@ function [x_p] = processHKDES(x_patches,x_patch_statistics, X_G, X_C, X_S,gamma_
 
     disp('Performing KPCA on basis vectors');
     % KPCA on the basis vectors phi_C
-    [alpha_c,lambda_c] = KPCA(K_c,20);
+    [alpha_c,lambda_c] = KPCA(K_c,min(20,length(K_c)-2));
     % KPCA on the basis vectors phi_Fg
-    [alpha_G,lambda_G] = KPCA(K_G,200);
+    [alpha_G,lambda_G] = KPCA(K_G,min(200,length(K_G)-2));
     % KPCA on the basis vectors phi_Fc
-    [alpha_C,lambda_C] = KPCA(K_C,200);
+    [alpha_C,lambda_C] = KPCA(K_C,min(200,length(K_C)-2));
     % KPCA on the basis vectors phi_Fs
-    [alpha_S,lambda_S] = KPCA(K_S,200);
+    [alpha_S,lambda_S] = KPCA(K_S,min(200,length(K_S)-2));
 
     disp('Computing eigenvectors of Gram matrices');
     % Computing eigenvectors of k_C x k_Fg

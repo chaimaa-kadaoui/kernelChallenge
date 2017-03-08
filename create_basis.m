@@ -9,11 +9,11 @@ function [X_G,X_C,X_S] = create_basis(x_patches,window_size, stride, T_grad,T_co
     
     % Creation of the basis points of k_Fg (using kmeans)
     disp('Creating basis points for gradient patch kernel (kmeans)');
-    [~, X_G] = k_means(patch_features(1:8:end,1:T_grad), n_clusters, 200);
+    [~, X_G] = k_means(patch_features(1:8:end,1:T_grad), n_clusters);
     % Creation of the basis points of k_Fc (using kmeans)
     disp('Creating basis points for intensity patch kernel (kmeans)');
-    [~, X_C] = k_means(patch_features(1:8:end,T_grad+(1:T_col)), n_clusters, 200);
+    [~, X_C] = k_means(patch_features(1:8:end,T_grad+(1:T_col)), n_clusters);
     % Creation of the basis points of k_Fs (using kmeans)
     disp('Creating basis points for shape patch kernel (kmeans)');
-    [~, X_S] = k_means(patch_features(1:8:end,T_grad+T_col+(1:T_shape)), n_clusters, 200);
+    [~, X_S] = k_means(patch_features(1:8:end,T_grad+T_col+(1:T_shape)), n_clusters);
 end

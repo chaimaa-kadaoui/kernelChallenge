@@ -1,9 +1,14 @@
-function [labels, C] = k_means(X, k, maxiter)
+function [labels, C] = k_means(X, k)
+    rng(1234);
+    
     n = size(X,1);
     labels = randi(k,1,n);
     last = 0;
     iter = 0;
-    while any(labels ~= last) && iter<maxiter
+    while any(labels ~= last)
+        [u,~,labels] = unique(labels);
+        labels = labels';
+        k = numel(u);
         E = sparse(1:n,labels,1,n,k,n);
         C = (E*spdiags(1./sum(E,1)',0,k,k))'*X;
         last = labels;
