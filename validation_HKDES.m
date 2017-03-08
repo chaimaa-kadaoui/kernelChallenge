@@ -13,7 +13,7 @@ mean_accs = zeros(length(params),1);
 
 parfor l=1:length(params)
 	x_train_cut = x_train_total_p(:,[1:params(l,1), 1000+(1:params(l,2)), 1200+(1:params(l,3))]);
-    [accs(l,:),mean_accs(l)] = validateHKDES(x_train_cut, y_train_total);
+    [accs(l,:),mean_accs(l)] = validateHKDES(x_train_cut, y_train_total, params(l,:));
 end
 
 %% Extract best parameters

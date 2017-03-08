@@ -1,4 +1,4 @@
-function [acc, mean_acc] = validateHKDES(x_train_total_p, y_train_total)
+function [acc, mean_acc] = validateHKDES(x_train_total_p, y_train_total, param)
 
     %% Cross-validation
 
@@ -39,7 +39,7 @@ function [acc, mean_acc] = validateHKDES(x_train_total_p, y_train_total)
         [~,pred] = max(prob,[],2);
         pred = pred-1;
         acc(valPart) = sum(pred == y_val(:,2))./ numTest;         % accuracy
-        fprintf('Accuracy using the validation split %i: %f\n',valPart, acc(valPart));
+        fprintf('Accuracy using the validation split %i with parameters [%i,%i,%i]: %f\n',valPart,param(1),param(2),param(3),acc(valPart));
         if acc<0.4
             fprintf('Validation stopped in advance\n')
             break
