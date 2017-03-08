@@ -31,7 +31,7 @@ save('x_HKDES_all.mat', 'x_all');
 n_features = [800,20,800];
 
 x_train_cut = x_all(1:size(x_train_total,1),[1:n_features(1), 1000+(1:n_features(2)), 1200+(1:n_features(3))]);
-x_test_cut = x_test_p(size(x_train_total,1)+(1:size(x_test,1)),[1:n_features(1), 1000+(1:n_features(2)), 1200+(1:n_features(3))]);
+x_test_cut = x_all(size(x_train_total,1)+(1:size(x_test,1)),[1:n_features(1), 1000+(1:n_features(2)), 1200+(1:n_features(3))]);
 
 %% Kernel
 
