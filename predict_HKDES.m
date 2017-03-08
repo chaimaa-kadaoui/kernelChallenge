@@ -24,7 +24,7 @@ save('x_patches_realRBF_test.mat','x_patches_test');
 save('x_statistics_realRBF_test.mat','x_statistics_test');
 
 [X_G,X_C,X_S] = create_basis(x_patches,8,2,200,50,200,1000);
-save('X_basis_realRBF.mat', 'X_G','X_C','X_S');
+save('X_basis_newKmeans_realRBF.mat', 'X_G','X_C','X_S');
 
 x_train_total_p = processHKDES(x_patches,x_statistics,X_G,X_C,X_S,1,1,1,1,0.5,8,2,1000,200,1000);
 save('x_HKDES_realRBF.mat', 'x_train_total_p');
