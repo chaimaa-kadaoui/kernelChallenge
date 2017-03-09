@@ -89,8 +89,12 @@ numLabels = length(unique(y_train_total(:,2)));
 model = cell(numLabels,numLabels);
 for k=1:numLabels
     for l=k+1:numLabels
-        fprintf('Computing SVM for class %i vs %i\n',k-1,l-1);                gram_train_partial = gram_train((y_train_total(:,2) == k-1) | (y_train_total(:,2) == l-1),:);
-        y_train_partial = y_train_total((y_train_total(:,2) == k-1) | (y_train_total(:,2) == l-1),:);
+        fprintf('Computing SVM for class %i vs %i\n',k-1,l-1);
+		selection = (y_train_total(:,2) == k-1) | (y_train_total(:,2) == l-1);
+		index = (1:size(y_train_total,1));
+		index = index(selection);
+		gram_train_partial = gram_train(index,index);
+        y_train_partial = y_train_total(index,:);
         model{k,l} = fitSVMPosterior(fitcsvm(gram_train_partial, double(y_train_partial(:,2)==k-1),'KernelFunction','RBF'));
     end
 end
@@ -101,18 +105,19 @@ prob = zeros(numTest,numLabels,numLabels);
 for k=1:numLabels
     for l=k+1:numLabels
         fprintf('Computing posteriors for class %i vs %i\n',k-1,l-1);
-        [~,p] = predict(model{k,l}, gram_test);
+		selection = (y_train_total(:,2) == k-1) | (y_train_total(:,2) == l-1);
+        [~,p] = predict(model{k,l}, gram_test(selection,:));
         prob(:,k,l) = p(:,model{k,l}.ClassNames==1) > 0.5;    % decision of class==k-1 vs class==l-1
         prob(:,l,k) = p(:,model{k,l}.ClassNames==1) <= 0.5;   %decision for class==l-1 vs class==k-1
     end
 end
-        
+
 % predict the class with the max vote
 [~,pred] = max(sum(prob,3),[],2);
 pred_diy = pred-1;
 
 % write prediction to file
-path = './results/Yte_allHKDES_800_20_800_C1.csv';
+path = './results/Yte_allHKDES_800_20_800_C1_1vs1.csv';
 csvfile = fopen(path,'w');
 fprintf(csvfile,'Id,Prediction\n');
 fclose(csvfile);
