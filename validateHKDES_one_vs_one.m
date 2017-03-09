@@ -18,15 +18,15 @@ function [acc, mean_acc] = validateHKDES_one_vs_one(x_train_total_p, y_train_tot
 
 		% train one-against-one models
 		numLabels = length(unique(y_train_total(:,2)));
-		model = cell(numLabels,numLabels);
+		model = cell(numLabels,1);
 		for k=1:numLabels
 		    for l=k+1:numLabels
 		        fprintf('Computing SVM for class %i vs %i\n',k-1,l-1);
-				selection = (y_train_total(:,2) == k-1) | (y_train_total(:,2) == l-1);
-				index = (1:size(y_train_total,1));
+				selection = (y_train(:,2) == k-1) | (y_train(:,2) == l-1);
+				index = (1:size(y_train,1));
 				index = index(selection);
 				x_train_partial = x_train(index,:);
-		        y_train_partial = y_train_total(index,:);
+		        y_train_partial = y_train(index,:);
 		        model{k,l} = fitSVMPosterior(fitcsvm(x_train_partial, double(y_train_partial(:,2)==k-1),'KernelFunction','linear'));
 		    end
 		end
