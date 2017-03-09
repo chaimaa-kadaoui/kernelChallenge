@@ -5,8 +5,7 @@ load('x_HKDES_realRBF.mat')
 y_train_total = csvread('Ytr.csv');
 
 %% Cross validation of HKDES features
-params = [[1000,200,1000]; [800,20,800]; [800, 80, 800]; [700,30,700];
-        [900, 20, 900]];
+params = [[700,20,700]; [700,20,800]; [800,20,700]; [850, 20, 850]];
 
 accs = zeros(length(params),10);
 mean_accs = zeros(length(params),1);

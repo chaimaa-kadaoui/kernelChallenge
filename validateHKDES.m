@@ -47,5 +47,5 @@ function [acc, mean_acc] = validateHKDES(x_train_total_p, y_train_total, param)
     end
 
     mean_acc = mean(acc(acc>0));
-    fprintf('Average accuracy with kernel descriptors: %f\n', mean_acc);
+    fprintf('Average accuracy with parameters %i,%i,%i: %f\n',param(1),param(2),param(3),mean_acc);
 end
