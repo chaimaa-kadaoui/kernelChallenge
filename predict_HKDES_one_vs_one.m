@@ -117,7 +117,7 @@ end
 pred_diy = pred-1;
 
 % write prediction to file
-path = './results/Yte_allHKDES_800_20_800_C1_1vs1.csv';
+path = './results/Yte_one_vs_one_HKDES_800_20_800_C1_1vs1.csv';
 csvfile = fopen(path,'w');
 fprintf(csvfile,'Id,Prediction\n');
 fclose(csvfile);
