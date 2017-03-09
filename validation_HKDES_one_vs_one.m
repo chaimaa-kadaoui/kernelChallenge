@@ -11,7 +11,7 @@ accs = zeros(length(params),10);
 mean_accs = zeros(length(params),1);
 
 for l=1:length(params)
-	x_train_cut = x_train_total_p(:,[1:params(l,1), 1000+(1:params(l,2)), 1200+(1:params(l,3))]);
+	x_train_cut = x_all(1:5000,[1:params(l,1), 1000+(1:params(l,2)), 1200+(1:params(l,3))]);
     [accs(l,:),mean_accs(l)] = validateHKDES_one_vs_one(x_train_cut, y_train_total, params(l,:));
 end
 
