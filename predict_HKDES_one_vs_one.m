@@ -105,7 +105,7 @@ prob = zeros(numTest,numLabels,numLabels);
 for k=1:numLabels
     for l=k+1:numLabels
         fprintf('Computing posteriors for class %i vs %i\n',k-1,l-1);
-		selection = (y_train_total(:,2) == k-1) | (y_train_total(:,2) == l-1);+
+		selection = (y_train_total(:,2) == k-1) | (y_train_total(:,2) == l-1);
 		index = (1:size(y_train_total,1));
 		index = index(selection);
         [~,p] = predict(model{k,l}, gram_test(index,:));
