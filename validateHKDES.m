@@ -19,9 +19,9 @@ function [acc, mean_acc] = validateHKDES(x_train_total_p, y_train_total, param)
         % train one-against-all models
         numLabels = length(unique(y_train(:,2)));
         model = cell(numLabels,1);
-        for k=1:numLabels
+        parfor k=1:numLabels
             fprintf('Computing SVM for class %i using the validation split %i\n',k, valPart);
-            model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction','linear'));
+            model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction','linear','BoxConstraint',param(4)));
         end
 
         %% Get the posterior probability matrix for the predictions
@@ -39,7 +39,7 @@ function [acc, mean_acc] = validateHKDES(x_train_total_p, y_train_total, param)
         [~,pred] = max(prob,[],2);
         pred = pred-1;
         acc(valPart) = sum(pred == y_val(:,2))./ numTest;         % accuracy
-        fprintf('Accuracy using the validation split %i with parameters [%i,%i,%i]: %f\n',valPart,param(1),param(2),param(3),acc(valPart));
+        fprintf('Accuracy using the validation split %i with parameters [%i,%i,%i] and C=%f: %f\n',valPart,param(1),param(2),param(3),param(4),acc(valPart));
         if acc<0.4
             fprintf('Validation stopped in advance\n')
             break
@@ -47,5 +47,5 @@ function [acc, mean_acc] = validateHKDES(x_train_total_p, y_train_total, param)
     end
 
     mean_acc = mean(acc(acc>0));
-    fprintf('Average accuracy with parameters %i,%i,%i: %f\n',param(1),param(2),param(3),mean_acc);
+    fprintf('Average accuracy with parameters [%i,%i,%i] and C=%f: %f\n',param(1),param(2),param(3),param(4),mean_acc);
 end
