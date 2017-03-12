@@ -1,3 +1,5 @@
+addpath(genpath(pwd))
+
 %% Load Data
 
 x_test = csvread('Xte.csv');

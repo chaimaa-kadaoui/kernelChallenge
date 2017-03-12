@@ -1,3 +1,5 @@
+addpath(genpath(pwd))
+
 %% Load Data
 
 x_test = csvread('Xte.csv');
@@ -40,8 +42,6 @@ gram_test = x_train_cut*x_test_cut';
 C = 1;
 
 %% Train SVM
-
-addpath ./SVM
 
 % train one-against-all models
 numLabels = length(unique(y_train_total(:,2)));

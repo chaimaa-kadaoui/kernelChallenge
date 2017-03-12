@@ -1,3 +1,5 @@
+addpath(genpath(pwd))
+
 %Test harris
 
 addpath 'Harris_method'

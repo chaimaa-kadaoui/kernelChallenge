@@ -1,3 +1,5 @@
+addpath(genpath(pwd))
+
 %% Load data
 x_train_total = csvread('Xtr.csv');
 x_train_total = x_train_total(:,1:end-1);
