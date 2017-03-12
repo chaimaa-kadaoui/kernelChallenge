@@ -1,3 +1,5 @@
+addpath(genpath(pwd))
+
 %% Load x_train_total_p from file x_HKDES.mat
 load('x_HKDES_all.mat')
 

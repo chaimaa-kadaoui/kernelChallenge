@@ -1,3 +1,5 @@
+addpath(genpath(pwd))
+
 %% Load Data
 
 x_test = csvread('Xte.csv');
@@ -15,9 +17,6 @@ x_test = reshape(x_test, [2000,1024,3]);
 x_test = mean(x_test,3);
 
 % Preprocess data
-
-%x_train_total_p = x_train_total;
-%x_test_p = x_test;
 
 window_size = 8;
 stride = 2;
@@ -41,9 +40,6 @@ model_diy = cell(numLabels,1);
 model = cell(numLabels,1);
 parfor k=1:numLabels
     fprintf('Computing SVM for class %i\n',k);
-%     % Matlab
-%     fprintf('Matlab \n');
-%     model{k} = fitSVMPosterior(fitcsvm(x_train_total_p, double(y_train_total(:,2)==k-1),'KernelFunction','RBF','Solver','L1QP'));
     % DIY
     fprintf('DIY \n');
     y_bin = zeros(size(y_train_total,1),1);
@@ -69,9 +65,6 @@ parfor k=1:numLabels
     [~, score] = predict_svm(gram_test, model_diy{k}.alpha_y, model_diy{k}.bias);
     post_proba = get_posterior(score, model_diy{k}.A, model_diy{k}.B);
     prob_diy(:,k) = post_proba(:,1);    %# probability of class==k
-%     fprintf('Matlab \n');
-%     [~,p] = predict(model{k}, x_test_p);
-%     prob(:,k) = p(:,model{k}.ClassNames==1);    % probability of class==k
 end
 
 %% Do the prediction
@@ -88,14 +81,3 @@ fprintf(csvfile,'Id,Prediction\n');
 fclose(csvfile);
 dlmwrite (path, pred_diy, '-append');
 
-% % predict the class with the highest probability
-% [~,pred] = max(prob,[],2);
-% pred = pred-1;
-% pred = [(1:numTest)' pred];
-% 
-% % write prediction to file
-% path = './results/Yte_NOT_DIY_L1QP.csv';
-% csvfile = fopen(path,'w');
-% fprintf(csvfile,'Id,Prediction\n');
-% fclose(csvfile);
-% dlmwrite (path, pred, '-append');
