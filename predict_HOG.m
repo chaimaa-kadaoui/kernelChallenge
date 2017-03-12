@@ -40,8 +40,6 @@ model_diy = cell(numLabels,1);
 model = cell(numLabels,1);
 parfor k=1:numLabels
     fprintf('Computing SVM for class %i\n',k);
-    % DIY
-    fprintf('DIY \n');
     y_bin = zeros(size(y_train_total,1),1);
     y_bin(y_train_total(:,2)==k-1)=1;
     y_bin(y_train_total(:,2)~=k-1)=-1;
@@ -61,7 +59,6 @@ prob_diy = zeros(numTest,numLabels);
 prob = zeros(numTest,numLabels);
 parfor k=1:numLabels
     fprintf('Computing posteriors for class %i\n',k);
-    fprintf('DIY \n');
     [~, score] = predict_svm(gram_test, model_diy{k}.alpha_y, model_diy{k}.bias);
     post_proba = get_posterior(score, model_diy{k}.A, model_diy{k}.B);
     prob_diy(:,k) = post_proba(:,1);    %# probability of class==k

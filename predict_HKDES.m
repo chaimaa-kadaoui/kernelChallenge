@@ -16,18 +16,22 @@ x_train_total = mean(x_train_total,3);
 x_test = reshape(x_test, [2000,1024,3]);
 x_test = mean(x_test,3);
 
-x = [x_train_total; x_test];
-
 % Preprocess data
-[x_patches_all, x_statistics_all] = processKDES(x,5,3,6,2,0.8,0.2,8,2,200,50,200);
-save('x_all.mat','x_patches_all');
-save('x_statistics_all.mat','x_statistics_all');
+if exist('x_HKDES_all.mat','file')==2
+    load('x_HKDES_all.mat');
+else
+    x = [x_train_total; x_test];
 
-[X_G,X_C,X_S] = create_basis(x_patches_all,8,2,200,50,200,1000);
-save('x_basis_all.mat', 'X_G','X_C','X_S');
+    [x_patches_all, x_statistics_all] = processKDES(x,5,3,6,2,0.8,0.2,8,2,200,50,200);
+    save('x_all.mat','x_patches_all');
+    save('x_statistics_all.mat','x_statistics_all');
 
-x_all = processHKDES(x_patches_all,x_statistics_all,X_G,X_C,X_S,1,1,1,1,0.5,8,2,1000,200,1000);
-save('x_HKDES_all.mat', 'x_all');
+    [X_G,X_C,X_S] = create_basis(x_patches_all,8,2,200,50,200,1000);
+    save('x_basis_all.mat', 'X_G','X_C','X_S');
+
+    x_all = processHKDES(x_patches_all,x_statistics_all,X_G,X_C,X_S,1,1,1,1,0.5,8,2,1000,200,1000);
+    save('x_HKDES_all.mat', 'x_all');
+end
 
 %% Select features
 n_features = [800,20,800];
@@ -46,7 +50,6 @@ C = 1;
 % train one-against-all models
 numLabels = length(unique(y_train_total(:,2)));
 model_diy = cell(numLabels,1);
-model = cell(numLabels,1);
 parfor k=1:numLabels
     fprintf('Computing SVM for class %i\n',k);
     y_bin = zeros(size(y_train_total,1),1);
@@ -65,12 +68,11 @@ end
 % get probability estimates of test instances using each model
 numTest = size(x_test_cut,1);
 prob_diy = zeros(numTest,numLabels);
-prob = zeros(numTest,numLabels);
 parfor k=1:numLabels
     fprintf('Computing posteriors for class %i\n',k);
     [~, score] = predict_svm(gram_test, model_diy{k}.alpha_y, model_diy{k}.bias);
     post_proba = get_posterior(score, model_diy{k}.A, model_diy{k}.B);
-    prob_diy(:,k) = post_proba(:,1);    %# probability of class==k
+    prob_diy(:,k) = post_proba(:,1);    % probability of class==k
 end
 
 %% Do the prediction
@@ -81,7 +83,7 @@ pred_diy = pred_diy-1;
 pred_diy = [(1:numTest)' pred_diy];
 
 % write prediction to file
-path = './results/Yte_allHKDES_800_20_800_C1.csv';
+path = 'Yte.csv';
 csvfile = fopen(path,'w');
 fprintf(csvfile,'Id,Prediction\n');
 fclose(csvfile);

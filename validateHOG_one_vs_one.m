@@ -40,14 +40,6 @@ function [acc, mean_acc] = validateHOG_one_vs_one(x_train_total,y_train_total, w
         y_val = y_train_total((valPart-1)*splitSize+1:valPart*splitSize,:);
 
         %% Train SVM
-
-        % train one-against-all models
-%         numLabels = length(unique(y_train(:,2)));
-%         model = cell(numLabels,1);
-%         for k=1:numLabels
-%             fprintf('Computing SVM for class %i using the validation split %i\n',k, valPart);
-%             model{k} = fitSVMPosterior(fitcsvm(x_train, double(y_train(:,2)==k-1),'KernelFunction',kernel));
-%         end
         
         % train one-against-one models
         numLabels = length(unique(y_train_total(:,2)));
@@ -64,15 +56,6 @@ function [acc, mean_acc] = validateHOG_one_vs_one(x_train_total,y_train_total, w
         %% Get the posterior probability matrix for the predictions
 
         % get probability estimates of test instances using each model
-%         numTest = size(x_val,1);
-%         prob = zeros(numTest,numLabels);
-%         for k=1:numLabels
-%             fprintf('Computing posteriors for class %i using the validation split %i\n',k,valPart);
-%             [~,p] = predict(model{k}, x_val);
-%             prob(:,k) = p(:,model{k}.ClassNames==1);    % probability of class==k
-%         end
-
-        % get probability estimates of test instances using each model
         numTest = size(x_val,1);
         prob = zeros(numTest,numLabels,numLabels);
         for k=1:numLabels
@@ -83,9 +66,6 @@ function [acc, mean_acc] = validateHOG_one_vs_one(x_train_total,y_train_total, w
                 prob(:,l,k) = p(:,model{k,l}.ClassNames==1) <= 0.5;   %decision for class==l-1 vs class==k-1
             end
         end
-
-        % predict the class with the highest probability
-        %[~,pred] = max(prob,[],2);
         
         % predict the class with the max vote
         [~,pred] = max(sum(prob,3),[],2);
